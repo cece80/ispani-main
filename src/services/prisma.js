@@ -9,6 +9,7 @@ const prisma = new PrismaClient({
   ],
 });
 
+// Log slow queries (> 1 second)
 prisma.$on('query', (e) => {
   if (e.duration > 1000) {
     logger.warn(`Slow query detected (${e.duration}ms): ${e.query}`);
@@ -19,6 +20,7 @@ prisma.$on('error', (e) => {
   logger.error('Prisma error:', e.message);
 });
 
+// Graceful shutdown
 process.on('SIGTERM', async () => {
   logger.info('SIGTERM received. Disconnecting Prisma...');
   await prisma.$disconnect();
@@ -29,4 +31,5 @@ process.on('SIGINT', async () => {
   await prisma.$disconnect();
 });
 
-module.exports = prisma;
+// Named export to match existing destructured imports
+module.exports = { prisma };
