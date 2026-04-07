@@ -1,4 +1,4 @@
-const prisma = require('./prisma');
+const { prisma } = require('./prisma');
 const logger = require('./logger');
 
 const auditLog = {
@@ -17,6 +17,7 @@ const auditLog = {
       });
     } catch (err) {
       logger.error('Failed to create audit log:', err.message);
+      // Don't throw - audit logging should never break the app
     }
   },
 
